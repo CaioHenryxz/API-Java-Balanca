@@ -1,57 +1,64 @@
-# API - Controle de Balança
+# Sistema de Monitoramento de Peso - Incubadora Neonatal (API)
 
-![STATUS](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=ORANGE&style=for-the-badge)
-![JAVA](http://img.shields.io/static/v1?label=TECH&message=JAVA%20SPRING&color=BLUE&style=for-the-badge)
+![STATUS](http://img.shields.io/static/v1?label=STATUS&message=CONCLUIDO&color=GREEN&style=for-the-badge)
+![VERSION](http://img.shields.io/static/v1?label=RELEASE&message=V1.0.0&color=BLUE&style=for-the-badge)
 
-## 📋 Sobre o projeto
+## 🏥 Sobre o Projeto
 
-Esta API RESTful foi desenvolvida para gerenciar e processar dados provenientes de uma balança de precisão (foco em aplicação neonatal/incubadora). O sistema é responsável por receber os sinais de peso, realizar a persistência dos dados e fornecer endpoints para consulta de histórico e monitoramento em tempo real.
+Este projeto consiste na implementação completa de uma API RESTful para o controle e monitoramento de peso em incubadoras neonatais. Desenvolvido no âmbito de uma **Iniciação Científica**, o sistema foi finalizado e validado para atuar como middleware entre o hardware de precisão (células de carga) e interfaces de monitoramento hospitalar.
 
-O projeto atua como o Back-end que integra o hardware (sensores de carga) com a interface do usuário ou sistemas de monitoramento hospitalar.
+O software soluciona o problema da pesagem não invasiva, aplicando algoritmos de tratamento de sinais para garantir a precisão dos dados mesmo com a movimentação do recém-nascido.
 
-## 🛠 Tecnologias Utilizadas
+## 🏛 Arquitetura Implementada
 
-* **Java 17**
-* **Spring Boot** (Framework principal)
-* **Spring Data JPA** (Persistência de dados)
-* **Maven** (Gerenciamento de dependências)
-* **H2 Database / MySQL** (Banco de dados)
+O projeto foi construído seguindo rigorosamente a arquitetura em camadas (Layered Architecture) para garantir escalabilidade e manutenção:
 
-## ⚙️ Funcionalidades Principais
+* **Controller Layer:** Gerencia as requisições HTTP e validação de entrada.
+* **Service Layer:** Contém a lógica "core" de negócio, incluindo algoritmos de tara e conversão de sinais.
+* **Integration Layer:** Módulo responsável pela comunicação serial (RS-232/USB) com o microcontrolador da balança.
+* **Persistence Layer:** Gerencia o armazenamento histórico de medições.
 
-- [x] **Leitura de Peso:** Recebimento de dados brutos da balança.
-- [x] **Histórico:** Armazenamento de logs de peso com timestamp.
-- [x] **Tara:** Funcionalidade lógica para zerar a balança via software.
-- [x] **Calibração:** Endpoints para ajuste de parâmetros de conversão.
-- [x] **API REST:** Disponibilização dos dados em formato JSON.
+## 🛠 Tecnologias e Ferramentas
 
-## 🔌 Endpoints (Exemplos)
+* **Linguagem:** Java 17 (LTS)
+* **Framework:** Spring Boot 3.0
+* **Banco de Dados:** MySQL (Produção) / H2 (Memória)
+* **Comunicação Serial:** jSerialComm / RXTX
+* **Documentação:** Swagger / OpenAPI
+* **Testes:** JUnit 5 e Mockito
 
-A API disponibiliza as seguintes rotas principais:
+## ⚙️ Funcionalidades Entregues
 
-| Método | Rota | Descrição |
-|---|---|---|
-| `GET` | `/api/weight/current` | Retorna o peso atual em tempo real. |
-| `GET` | `/api/weight/history` | Retorna o histórico de medições. |
-| `POST` | `/api/scale/tare` | Executa a função de tara (zerar). |
-| `POST` | `/api/scale/calibrate` | Envia parâmetros de calibração. |
+### 1. Processamento Digital de Sinais
+- [x] Implementação de filtros de média móvel para estabilização de leitura.
+- [x] Algoritmo de rejeição de picos (movimentação brusca).
+- [x] Conversão AD (Analógico-Digital) tratada via software.
 
-## 🚀 Como executar o projeto
+### 2. Controle da Balança
+- [x] **Tara Remota:** Endpoint para zerar a balança via API.
+- [x] **Calibração:** Interface para ajuste de fator de calibração sem necessidade de recompilar o código.
 
-### Pré-requisitos
-Certifique-se de ter o **Java JDK** e o **Maven** instalados em sua máquina.
+### 3. Gestão de Dados
+- [x] Histórico completo de variações de peso por sessão.
+- [x] Logs de auditoria e erros de comunicação com hardware.
 
-### Passo a passo
+## 🔌 Documentação da API
+
+A API está totalmente documentada seguindo a especificação OpenAPI.
+Com a aplicação rodando, a documentação interativa pode ser acessada em:
+`/swagger-ui.html`
+
+## 🚀 Como executar (Build Final)
 
 ```bash
 # 1. Clone o repositório
 git clone [https://github.com/CaioHenryxz/API-Java-Balanca.git](https://github.com/CaioHenryxz/API-Java-Balanca.git)
 
-# 2. Acesse o diretório do projeto
+# 2. Acesse a pasta
 cd API-Java-Balanca
 
-# 3. Compile o projeto e baixe as dependências
-./mvnw clean install
+# 3. Gere o executável (JAR)
+./mvnw clean package
 
-# 4. Execute a aplicação
-./mvnw spring-boot:run
+# 4. Execute o artefato final
+java -jar target/balanca-api-1.0.0.jar
